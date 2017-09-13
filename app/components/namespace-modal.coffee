@@ -2,29 +2,25 @@
 `import ENV from 'irene/config/environment';`
 `import { translationMacro as t } from 'ember-i18n'`
 
-NamespaceComponentComponent = Ember.Component.extend
+NamespaceModalComponent = Ember.Component.extend
+
   i18n: Ember.inject.service()
-  
-  classNames: ["column" , "is-one-third"]
-  added: false
-  namespace: ""
   showNamespaceModal: false
 
-  tRequestToAddNamespace: t("requestToAddNamespace")
+  newNamespaceObserver: Ember.observer "realtime.namespace", ->
+    @set "showNamespaceModal", true
 
-  notAdded: (->
-    !@get "added"
-  ).property "added"
+
+  tRequestToAddNamespace: t("requestToAddNamespace")
 
   actions:
     addNamespace: ->
       tRequestToAddNamespace = @get "tRequestToAddNamespace"
       data =
-        namespace: @get "namespace"
+        namespace: @get "realtime.namespace"
       that = @
       @get("ajax").post ENV.endpoints.namespaceAdd, data: data
       .then ->
-        that.set "namespace", ""
         that.get("notify").success tRequestToAddNamespace
         that.set "showNamespaceModal", false
       .catch (error) ->
@@ -32,7 +28,4 @@ NamespaceComponentComponent = Ember.Component.extend
         for error in error.errors
           that.get("notify").error error.detail?.message
 
-    toggleNamspaceModal: ->
-      @set "showNamespaceModal", !@get "showNamespaceModal"
-
-`export default NamespaceComponentComponent`
+`export default NamespaceModalComponent`

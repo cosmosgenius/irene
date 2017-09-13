@@ -1,8 +1,6 @@
 `import Ember from 'ember'`
 `import ENV from 'irene/config/environment';`
-
-hasApiFilter = (url)->
-  return !Ember.isEmpty url
+`import { translationMacro as t } from 'ember-i18n'`
 
 isRegexFailed = (url) ->
   reg = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/
@@ -10,8 +8,13 @@ isRegexFailed = (url) ->
 
 ApiFilterComponent = Ember.Component.extend
   project: null
-
   deletedURL: ""
+  i18n: Ember.inject.service()
+
+  tEmptyURL: t("emptyURL")
+  tInvalidURL: t("invalidURL")
+  tURLAdded: t("urlAdded")
+
 
   confirmCallback: ->
     deletedURL = @get "deletedURL"
@@ -27,13 +30,16 @@ ApiFilterComponent = Ember.Component.extend
       allFilters = @$('.input')
       urls = ""
       uniqueArrays = ""
+      tEmptyURL = @get "tEmptyURL"
+      tInvalidURL = @get "tInvalidURL"
+      tURLAdded = @get "tURLAdded"
       filterArray = Ember.ArrayProxy.create content: Ember.A allFilters
       that = @
       filterArray.forEach (filter) ->
         url = filter.value
         for url in [url]
-          return callback(that.get("notify").error "Please enter any url filter") if !hasApiFilter url
-          return callback(that.get("notify").error " '#{url}' is an invalid url") if !isRegexFailed url
+          if !Ember.isEmpty url
+            return callback(that.get("notify").error "#{url} #{tInvalidURL}") if !isRegexFailed url
         urls = that.get "urls"
         if Ember.isEmpty urls
           urls = url
@@ -44,12 +50,15 @@ ApiFilterComponent = Ember.Component.extend
       splittedArray = urls?.split ","
       uniqueArrays = splittedArray.uniq()
       urlString = uniqueArrays.join ','
+      if Ember.isEmpty urlString
+        return that.get("notify").error tEmptyURL
+      urlString = urlString.replace(/,\s*$/, "")
       apiScanOptions = [ENV.host,ENV.namespace, ENV.endpoints.apiScanOptions, project_id].join '/'
       data =
         apiUrlFilters: urlString
       @get("ajax").post apiScanOptions, data: data
       .then (data)->
-        that.get("notify").success "Successfully added the url filter"
+        that.get("notify").success tURLAdded
       .catch (error) ->
         for error in error.errors
           that.get("notify").error error.detail?.message

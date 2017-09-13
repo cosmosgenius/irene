@@ -1,12 +1,15 @@
 `import Ember from 'ember'`
 `import ENUMS from 'irene/enums';`
 `import ENV from 'irene/config/environment';`
+`import { translationMacro as t } from 'ember-i18n'`
 
 vncHeight = 512
 vncWidth = 385
 
 VncViewerComponent = Ember.Component.extend
+  i18n: Ember.inject.service()
   onboard: Ember.inject.service()
+
   rfb: null
   file: null
   isPoppedOut: false
@@ -19,7 +22,10 @@ VncViewerComponent = Ember.Component.extend
       "Pop Out Modal"
   ).property "isPoppedOut"
 
-  didInsertElement: ->
+  setupRFB: ->
+    rfb = @get "rfb"
+    if !Ember.isEmpty rfb
+      return
     canvasEl = @element.getElementsByClassName("canvas")[0]
     that = @
     @set "rfb", new RFB
@@ -46,12 +52,37 @@ VncViewerComponent = Ember.Component.extend
     if @get 'file.isReady'
       @send("connect")
 
+
+  didUpdate: ->
+    @setupRFB()
+
+  didInsertElement: ->
+    @setupRFB()
+
   statusChange: ( ->
     if @get 'file.isReady'
       @send("connect")
     else
       @send "disconnect"
   ).observes 'file.dynamicStatus'
+
+  isAndroidDevice: (->
+    platform = @get "file.project.platform"
+    if platform is ENUMS.PLATFORM.ANDROID
+      true
+  ).property "file.project.platform"
+
+  isIOSDevice: (->
+    platform = @get "file.project.platform"
+    if platform is ENUMS.PLATFORM.IOS
+      true
+  ).property "file.project.platform"
+
+  isNeitherAndroidNorIOS: (->
+    platform = @get "file.project.platform"
+    if platform not in [ENUMS.PLATFORM.ANDROID, ENUMS.PLATFORM.IOS]
+      true
+  ).property "file.project.platform"
 
   actions:
     togglePop: ->
@@ -66,62 +97,5 @@ VncViewerComponent = Ember.Component.extend
       rfb = @get "rfb"
       if rfb._rfb_connection_state is 'connected'
         rfb.disconnect()
-
-    dynamicScan: ->
-      file = @get "file"
-      file.setBootingStatus()
-      file_id = @get "file.id"
-      dynamicUrl = [ENV.endpoints.dynamic, file_id].join '/'
-      @get("ajax").request dynamicUrl
-      .catch (error) ->
-        file.setNone()
-        for error in error.errors
-          that.get("notify").error error.detail?.message
-
-    doNotRunAPIScan: ->
-      @set "isApiScanEnabled", false
-      @send "isApiScanEnabled"
-
-    runAPIScan: ->
-      @set "isApiScanEnabled", true
-      @send "isApiScanEnabled"
-
-    isApiScanEnabled: ->
-      isApiScanEnabled = @get "isApiScanEnabled"
-      project_id = @get "file.project.id"
-      apiScanOptions = [ENV.host,ENV.namespace, ENV.endpoints.apiScanOptions, project_id].join '/'
-      that = @
-      data =
-        isApiScanEnabled: isApiScanEnabled
-      @get("ajax").post apiScanOptions, data: data
-      .then (data)->
-        that.send "closeModal"
-        that.send "dynamicScan"
-        that.get("notify").success "Starting the scan"
-      .catch (error) ->
-        for error in error.errors
-          that.get("notify").error error.detail?.message
-
-    dynamicShutdown: ->
-      file = @get "file"
-      file.setShuttingDown()
-      @set "isPoppedOut", false
-      file_id = @get "file.id"
-      shutdownUrl = [ENV.endpoints.dynamicShutdown, file_id].join '/'
-      @get("ajax").request shutdownUrl
-      .catch (error) ->
-        file.setNone()
-        for error in error.errors
-          that.get("notify").error error.detail?.message
-
-    openAPIScanModal: ->
-      platform = @get "file.project.platform"
-      if platform in [ENUMS.PLATFORM.ANDROID,ENUMS.PLATFORM.IOS] # TEMPIOSDYKEY
-        @set "showAPIScanModal", true
-      else
-        @send "doNotRunAPIScan"
-
-    closeModal: ->
-      @set "showAPIScanModal", false
 
 `export default VncViewerComponent`

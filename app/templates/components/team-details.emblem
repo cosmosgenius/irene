@@ -7,8 +7,8 @@
             .column
               = team.name
             .column.is-one-sixth
-              button.add-member click="openAddMemberModal"
-                = t "addMember"
+              button.add-member.uppercase-text click="openAddMemberModal"
+                | + #{t "addMember"}
       tr
         th
           = t "members"
@@ -29,7 +29,16 @@
         each team.teamMembers as |member|
           = team-member member=member team=team
 
-= modal-card isActive=showAddMemberModal title="Add Member"
+      if invitations
+        div.pending-invitation
+          .box-title
+            = t "pendingInvitations"
+          ul.invitation-list
+            each invitations as |invitation|
+              li
+                = pending-invitation invitation=invitation
+
+= modal-card isActive=showAddMemberModal title=(t "modalCard.addMember.title")
   .card-body
     .card-wrapper
       form

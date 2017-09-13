@@ -6,7 +6,7 @@ $FreestyleGuide-color--foreground: $text
 $FreestyleGuide-color--background: $background
 @import 'ember-freestyle'
 
-$risk-names: (warning: ($warning, $warning-invert), danger: ($danger, $danger-invert), critical: ($critical, $critical-invert)) !default
+$risk-names: (warning: ($warning, $warning-invert), info: ($info, $info-invert), danger: ($danger, $danger-invert), critical: ($critical, $critical-invert)) !default
 
 
 /* Margin Defines*/
@@ -114,12 +114,11 @@ $risk-names: (warning: ($warning, $warning-invert), danger: ($danger, $danger-in
     font-weight: lighter
     &:hover
       font-weight: bolder
-      color: lighten(#EF4836, 10%)
-      background-color: #e5e5e5
+      color: lighten(#EF4836, 15%)
+      background-color: #f0f0f0
     &.is-active
       font-weight: bolder
   a.active
-    background-color: #d8d8d8
     color: #EF4836
     font-weight: 900
 
@@ -129,6 +128,9 @@ input
 .top-nav
   height: 50px
   background-color: #f0f0f0
+
+canvas.other-devices
+  margin-top: 30px
 
 .title-tag
   background-color: #5bc0de
@@ -299,8 +301,31 @@ div[class^="_c-notification__container"]
 .risk-icons
   font-size: 14px
 
+.fa-font-size-small i
+  font-size: 13px!important
+  margin-top: 6px
+
+.fa-font-size i
+  font-size: 15px!important
+  margin-top: 5px
+
+.columns-main-container
+  margin-top: 0px!important
+
+.box-container
+  padding: 5px 20px 20px 20px
+  border-bottom: 3px solid #f0f0f0
+  margin-left: -9px
+  margin-right: -9px
+  margin-bottom: 10px
+
+.project-container
+  margin-top: 10px
+
 .side-menu
   .box
+    background-color: #f0f0f0
+    box-shadow: none
     margin-top: 30px
   .menu
     position: fixed
@@ -418,7 +443,7 @@ button, .button
   table
     tr
       th
-        background-color: #80C081
+        background-color: $default
         color: #fff
       th, td
         text-align: center
@@ -429,7 +454,7 @@ button, .button
   table
     tr
       th
-        background-color: #A9A9A9
+        background-color: $default
       th, td
         border: 1px solid #808080
 
@@ -554,8 +579,6 @@ b.bold
 
 .details
   padding: 2px 3px
-  border: 1px solid #fff
-  background-color: #fff
   color: #808080
   max-height: 25px
 
@@ -571,6 +594,12 @@ b.bold
   padding: 0px 9px
   .columns
     margin-top: 0px
+
+.message .message-header.is-progress
+  border-color: rgb(255, 224, 221)
+  border-width: 2px 2px 2px 15px
+  border-style: solid
+
 
 .vulnerability-types
   text-align: center
@@ -589,7 +618,7 @@ b.bold
     td:nth-child(3)
       width: 80%
   tr.table-head
-    background-color: lighten(rgb(107, 107, 107), 10%)
+    background-color: $default
     color: #fff
     font-weight: 100
     td
@@ -608,6 +637,7 @@ ul.risk-table
     margin-bottom: -5px
     margin-top: 10px
   li
+    font-size: 13px
     padding: 2px
     width: 120px
     margin-left: 15px
@@ -623,9 +653,6 @@ ul.risk-table
 .progress-wrap
   width: 60%
   border-radius: 10px!important
-
-canvas
-  margin-top: 30px
 
 .button-width
   .column
@@ -716,14 +743,14 @@ canvas
     padding-top: 30px
 
 .team-container
-  padding: 30px 100px
+  padding: 0px 100px
 
 .team-details-container
   padding: 30px 150px
 
 .team-overview-card
   header:nth-child(1)
-    background-color: $blue
+    background-color: $default
     color: $white
   .fa-times
     color: #EF4836
@@ -748,10 +775,11 @@ canvas
       border: 1px solid #b8b8b8
       padding: 10px 0px
     th
-      background-color: #6B6B6B
+      background-color: $default
       color: #fff
   button.add-member
     color: $white
+    margin-right: 10px
     &:hover
       border-color: $white
   .fa-times
@@ -782,6 +810,11 @@ canvas
   button
     margin-top: -40px
 
+ul.api-filter-list
+  li
+    margin-left: 25px
+  li:before
+    content: "• "
 
 .filter-list
   input
@@ -822,7 +855,7 @@ button.delete-button
       border: 1px solid #b8b8b8
       padding: 10px 0px
     th
-      background-color: #6B6B6B
+      background-color: $default
       color: #fff
   select
     width: 60%
@@ -871,3 +904,85 @@ button.delete-button
 .feedback-button
   margin-top: 20px
   text-align: center
+
+.pending-invitation
+  .box-title
+    margin: 20px 0 20px 10px
+    border: 1px solid #000
+    width: 150px
+    text-align: center
+  ul.invitation-list
+    margin-left: 30px
+    li
+      list-style-type: disc
+
+.no-project-container
+  padding: 150px 350px 70px 350px
+  .no-project
+    padding: 10px
+    border: 2px solid #A9A9A9
+    border-radius: 5px
+    text-align: center
+    color: $grey
+    .red-text
+      color: $red
+
+.marvel-device.nexus5
+  width: 265px!important
+  height: 450px!important
+
+.marvel-device.iphone5s
+  width: 245px!important
+  height: 385px!important
+  padding: 88px 22px
+  .screen
+    width: 88%
+    margin-left: 6%
+    canvas.canvas
+      width: 216px!important
+  .home
+    width: 50px
+    height: 50px
+    left: 52%
+
+.repeat-icon
+  margin-left: 10px
+  margin-top: 15px
+  color: $red
+  cursor: pointer
+
+.modal-card.device-modal
+  max-height: calc(100vh - 10px)
+  .modal-card-head
+    border-bottom: 0px
+  .modal-card-body
+    min-height: 582px
+    button
+      margin-top: 45px
+
+.tabs.is-boxed
+  li.is-active a
+    padding: 2px 10px
+    border-color: #f0f0f0
+    border-top: 3px solid #EF4836
+  a
+    padding: 3px 10px
+    &:hover
+      border-bottom-color: #f0f0f0
+  ul
+    border-color: #f0f0f0
+
+.loading-container
+  margin: 20% auto
+  i
+    font-size: 80px
+    display: flex
+    align-items: center
+    margin-bottom: 10px
+  div
+    font-size: 20px
+
+.login-wrapper
+  h6
+    margin-top: -15px
+    margin-bottom: 25px

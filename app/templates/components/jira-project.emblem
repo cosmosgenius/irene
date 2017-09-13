@@ -1,4 +1,5 @@
-h5 JIRA
+h5
+  = t "jiraIntegration"
 
 if project.jiraProject
   h5
@@ -19,4 +20,4 @@ else
           option value=project
             = project
 
-= confirm-box isActive=showDeleteJIRAConfirmBox title="Are you sure you want to remove JIRA Project?" delegate=this
+= confirm-box isActive=showDeleteJIRAConfirmBox title=(t 'confirmBox.removeJIRA') delegate=this

@@ -1,8 +1,11 @@
 `import DS from 'ember-data'`
 `import ENUMS from 'irene/enums'`
 `import ENV from 'irene/config/environment';`
+`import { translationMacro as t } from 'ember-i18n'`
 
 User = DS.Model.extend
+
+  i18n: Ember.inject.service()
 
   uuid: DS.attr 'string'
   invoices: DS.hasMany 'invoice', inverse:'user'
@@ -31,6 +34,11 @@ User = DS.Model.extend
   billingHidden: DS.attr 'boolean'
   mfaMethod: DS.attr 'number'
   mfaSecret: DS.attr 'string'
+  isTrial: DS.attr 'boolean'
+
+  tProject: t("project")
+  tProjects: t("projects")
+  tNoProject: t("noProject")
 
   provisioningURL: (->
     mfaSecret = @get "mfaSecret"
@@ -46,12 +54,15 @@ User = DS.Model.extend
   ).property "mfaMethod"
 
   totalProjects: (->
+    tProject = @get "tProject"
+    tNoProject = @get "tNoProject"
     projectCount = @get "projectCount"
+    tProjects = @get("tProjects").string.toLowerCase()
     if projectCount is 0
-      return "no project"
+      return tNoProject
     else if projectCount is 1
-      return "#{projectCount} project"
-    "#{projectCount} projects"
+      return "#{projectCount} #{tProject}"
+    "#{projectCount} #{tProjects}"
   ).property "projectCount"
 
   ifBillingIsNotHidden: (->
@@ -91,5 +102,7 @@ User = DS.Model.extend
   namespacesCount: Ember.computed.alias 'namespaces.length'
 
   hasNamespace: Ember.computed.gt 'namespacesCount', 0
+
+  hasProject: Ember.computed.gt 'projectCount', 0
 
 `export default User`

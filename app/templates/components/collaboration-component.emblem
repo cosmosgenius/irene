@@ -3,8 +3,8 @@
     h5
       = t "collaborations"
   .column.content-right.margin-right100
-    button.is-primary.mp-open-collaboration-modal click="openCollaborationModal"
-      = t "addTeam"
+    button.is-primary.mp-open-collaboration-modal.uppercase-text click="openCollaborationModal"
+      | + #{t "addTeam"}
 
 .collaboration-container
   table.collaboration-table.margin-top
@@ -20,7 +20,7 @@
     each collaborations as |collaboration|
       = collaboration-details collaboration=collaboration
 
-= modal-card isActive=showCollaborationModal title="Add Team to project"
+= modal-card isActive=showCollaborationModal title=(t "modalCard.collaboration.title")
   .card-body
     .card-wrapper
       form

@@ -25,13 +25,18 @@ export default function() {
   this.get('/invitations/:id', 'invitation');
   this.get('/devices', 'device');
   this.get('/invoices', 'invoice');
-  this.get('/invoices/:id ', 'invoice');
+  this.get('/invoices/:id', 'invoice');
+  this.get('/invitations/', 'invitation');
 
   this.get('/github_repos', () => {
     return {};
   });
 
   this.get('/dynamic/:id', () => {
+    return {};
+  });
+
+  this.get('/manual/:id', () => {
     return {};
   });
 
@@ -59,6 +64,10 @@ export default function() {
     return {};
   });
 
+  this.post('/set_github/:id', () => {
+    return {};
+  });
+
   this.post('/lang', () => {
     return {};
   });
@@ -83,11 +92,15 @@ export default function() {
     return {};
   });
 
-  this.post('/delete_github_repo/:id', () => {
+  this.post('/unauthorize_jira', () => {
     return {};
   });
 
-  this.post('/delete_jira_project/:id', () => {
+  this.delete('/delete_github_repo/:id', () => {
+    return {};
+  });
+
+  this.delete('/delete_jira_project/:id', () => {
     return {};
   });
 
@@ -116,6 +129,14 @@ export default function() {
   });
 
   this.post('/teams/:id', () => {
+   return;
+ });
+
+  this.post('/teams/:id/members', () => {
+   return;
+  });
+
+  this.delete('/teams/:id/members/Berniece', () => {
    return;
   });
 
