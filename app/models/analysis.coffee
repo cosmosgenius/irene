@@ -7,6 +7,7 @@ Analysis = DS.Model.extend
   i18n: Ember.inject.service()
   file: DS.belongsTo 'file', inverse: 'analyses'
   findings: DS.attr()
+  attachments: DS.attr()
   analiserVersion: DS.attr 'number'
   risk: DS.attr 'number'
   status: DS.attr 'number'

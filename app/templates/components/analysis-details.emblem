@@ -59,3 +59,14 @@ if showVulnerability
             p.extra-desc = finding.title
             span.scrollable-box
               pre.pre-code = finding.description
+
+        if analysis.attachments
+          h5.margin-top20
+            | Attachments
+
+          each analysis.attachments as |attachment|
+            a.attachment href="{{ attachment.url }}" title="{{ attachment.file-key }}" data-type="{{ file-extension attachment.file-key }}"
+              span.attachment__label
+                | &nbsp; #{attachment.file-key}
+              span.attachment__icon
+                i.fa.fa-download
