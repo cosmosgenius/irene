@@ -59,7 +59,7 @@ FileHeaderComponent = Ember.Component.extend
       file.setBootingStatus()
       file_id = @get "file.id"
       dynamicUrl = [ENV.endpoints.dynamic, file_id].join '/'
-      @get("ajax").request dynamicUrl
+      @get("ajax").put dynamicUrl, data: {}
       .catch (error) ->
         file.setNone()
         for error in error.errors
@@ -69,14 +69,15 @@ FileHeaderComponent = Ember.Component.extend
       tStartingScan = @get "tStartingScan"
       isApiScanEnabled = @get "isApiScanEnabled"
       project_id = @get "file.project.id"
+      file_id = @get "file.id"
       apiScanOptions = [ENV.host,ENV.namespace, ENV.endpoints.apiScanOptions, project_id].join '/'
       that = @
+      dynamicUrl = [ENV.endpoints.dynamic, file_id].join '/'
       data =
-        isApiScanEnabled: isApiScanEnabled
-      @get("ajax").post apiScanOptions, data: data
+        isApiScanEnabled: isApiScanEnabled == true
+      @get("ajax").put dynamicUrl, data: data
       .then (data)->
         that.send "closeModal"
-        that.send "dynamicScan"
         that.get("notify").success tStartingScan
       .catch (error) ->
         for error in error.errors
@@ -173,8 +174,8 @@ FileHeaderComponent = Ember.Component.extend
       file.setShuttingDown()
       @set "isPoppedOut", false
       file_id = @get "file.id"
-      shutdownUrl = [ENV.endpoints.dynamicShutdown, file_id].join '/'
-      @get("ajax").request shutdownUrl
+      dynamicUrl = [ENV.endpoints.dynamic, file_id].join '/'
+      @get("ajax").delete dynamicUrl
       .then () ->
         file.setNone()
       .catch (error) ->

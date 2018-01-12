@@ -1,6 +1,13 @@
 /* jshint node: true */
 
+var url = require('url');
+
 module.exports = function(environment) {
+  var devicefarmEnv = process.env.IRENE_DEVICEFARM_URL || "wss://devicefarm.appknox.com";
+  var deviceFarmWebsockifyHost = url.parse(devicefarmEnv);
+  var deviceFarmSsl = deviceFarmWebsockifyHost.protocol == "wss:";
+  var deviceFarmPort = deviceFarmWebsockifyHost.port || (deviceFarmSsl ? 443:80);
+  var deviceFarmHost = deviceFarmWebsockifyHost.hostname;
   var ENV = {
     isDevknox: false,
     isAppknox: false,
@@ -71,10 +78,10 @@ module.exports = function(environment) {
       allowEmpty: true, // default: false
       includeLocales: ['en', 'ja']
     },
-    deviceFarmSsl: true,
-    deviceFarmPort: "443",
+    deviceFarmSsl: deviceFarmSsl,
+    deviceFarmPort: deviceFarmPort,
     deviceFarmPath: "websockify",
-    deviceFarmHost: "devicefarm.appknox.com",
+    deviceFarmHost: deviceFarmHost,
     namespace: "api",
     host: "https://api.appknox.com",
     'ember-cli-mirage': {
@@ -115,7 +122,7 @@ module.exports = function(environment) {
       logout: 'logout',
       devices: 'devices',
       devicePreferences: 'device_preference',
-      dynamic: 'dynamic',
+      dynamic: 'dynamicscan',
       dynamicShutdown: 'dynamic_shutdown',
       signedPdfUrl: 'signed_pdf_url',
       storeUrl: 'store_url',
